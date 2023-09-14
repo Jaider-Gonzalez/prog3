@@ -39,5 +39,30 @@ public class Operacion {
     return matR;
   }
 
-  // ... continuar con los demás métodos
+ public static double[][] sumaEscalar(double[][] matA, double escalar) {
+    int filas = matA.length;
+    int cols = matA[0].length;
+    double[][] matR = new double[filas][cols];
+
+    for (int i = 0; i < filas; i++) {
+      for (int j = 0; j < cols; j++) {
+        matR[i][j] = matA[i][j] + escalar;
+      }
+    }
+
+    return matR;
+  }
+   public static double[][] transpuesta(double[][] matA) {
+    int filas = matA.length;
+    int cols = matA[0].length;
+    double[][] matT = new double[cols][filas];
+
+    for (int i = 0; i < filas; i++) {
+      for (int j = 0; j < cols; j++) {
+        matT[j][i] = matA[i][j];
+      }
+    }
+
+    return matT;
+  }
 }
