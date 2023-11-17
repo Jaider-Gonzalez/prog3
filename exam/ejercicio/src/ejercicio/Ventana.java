@@ -14,6 +14,7 @@ public class Ventana extends javax.swing.JFrame {
    private int contadorPedalazos = 0;
    private int clicksPorPedalazo = 1;
    private Timer timer;
+   private boolean esPedalIzquierdo = true;
    
     public Ventana() {
         initComponents();
@@ -141,7 +142,7 @@ public class Ventana extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
- private void initTimer() {
+private void initTimer() {
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -191,7 +192,7 @@ public class Ventana extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Valor actualizado correctamente.");
             if (jComboBox1.getSelectedItem().equals("Automatico")) {
                 // Si es modo automático, simular clics automáticamente
-                simularClickAutomatico();
+                timer.restart();
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Ingrese un valor válido para los clicks por pedalazo.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -204,19 +205,26 @@ public class Ventana extends javax.swing.JFrame {
 
    private void actualizarBotones() {
         // Desactivar el botón actual y activar el otro
-      if (contadorPedalazos % clicksPorPedalazo == 0) {
-        // Si se ha alcanzado, cambia la visibilidad y la activación de los botones
-        pedalIzquierdoButton.setEnabled(!pedalIzquierdoButton.isEnabled());
-        pedalDerechoButton.setEnabled(!pedalDerechoButton.isEnabled());
-    }
+       if (contadorPedalazos % clicksPorPedalazo == 0) {
+            esPedalIzquierdo = !esPedalIzquierdo;
+            pedalIzquierdoButton.setEnabled(esPedalIzquierdo);
+            pedalDerechoButton.setEnabled(!esPedalIzquierdo);
+        }
     }
    
    private void simularClickAutomatico() {
         // Este método se ejecutará automáticamente cada vez que el temporizador avance
         // Simula un clic en el botón derecho automáticamente
-        for (int i = 0; i < clicksPorPedalazo; i++) {
+         for (int i = 0; i < clicksPorPedalazo; i++) {
+        if (esPedalIzquierdo) {
+            pedalIzquierdoButton.doClick();
+        } else {
             pedalDerechoButton.doClick();
         }
+        contadorPedalazos++;
+        actualizarContador();
+        actualizarBotones();
+    }
     }
    
    
@@ -251,4 +259,4 @@ public class Ventana extends javax.swing.JFrame {
 }
 
 
-// comit 333
+// comit xd
