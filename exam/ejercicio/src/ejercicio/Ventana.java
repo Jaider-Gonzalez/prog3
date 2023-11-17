@@ -7,16 +7,20 @@ package ejercicio;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 public class Ventana extends javax.swing.JFrame {
 
    private int contadorPedalazos = 0;
    private int clicksPorPedalazo = 1;
-    
+   private Timer timer;
+   
     public Ventana() {
         initComponents();
+        
         pedalIzquierdoButton.setEnabled(false);
         pedalDerechoButton.setEnabled(true);
+        initTimer();
     }
 
     /**
@@ -57,7 +61,7 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Automatico", "Manual" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manual", "Automatico" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -137,9 +141,29 @@ public class Ventana extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+ private void initTimer() {
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simularClickAutomatico();
+            }
+        });
+    }
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
+        
+        if (jComboBox1.getSelectedItem().equals("Automatico")) {
+            // Si es modo automático, desactivar los botones y comenzar el temporizador
+            pedalIzquierdoButton.setEnabled(false);
+            pedalDerechoButton.setEnabled(false);
+            timer.start();
+        } else {
+            // Si es modo manual, detener el temporizador
+            timer.stop();
+            // Restaurar la configuración de los botones
+            pedalIzquierdoButton.setEnabled(false);
+            pedalDerechoButton.setEnabled(true);
+        }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void pedalIzquierdoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pedalIzquierdoButtonActionPerformed
@@ -165,6 +189,10 @@ public class Ventana extends javax.swing.JFrame {
           try {
             clicksPorPedalazo = Integer.parseInt(entradaTextField.getText());
             JOptionPane.showMessageDialog(null, "Valor actualizado correctamente.");
+            if (jComboBox1.getSelectedItem().equals("Automatico")) {
+                // Si es modo automático, simular clics automáticamente
+                simularClickAutomatico();
+            }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Ingrese un valor válido para los clicks por pedalazo.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -182,6 +210,16 @@ public class Ventana extends javax.swing.JFrame {
         pedalDerechoButton.setEnabled(!pedalDerechoButton.isEnabled());
     }
     }
+   
+   private void simularClickAutomatico() {
+        // Este método se ejecutará automáticamente cada vez que el temporizador avance
+        // Simula un clic en el botón derecho automáticamente
+        for (int i = 0; i < clicksPorPedalazo; i++) {
+            pedalDerechoButton.doClick();
+        }
+    }
+   
+   
     /**
      * @param args the command line arguments
      */
@@ -193,6 +231,10 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
     }
+    
+      
+      
+      
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField entradaTextField;
